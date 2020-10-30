@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
+  flex: 0 1 auto;
   background: #ffe81f;
   padding: 0 30px;
 `;
@@ -39,7 +40,7 @@ export const Content = styled.div`
   }
 `;
 
-export const Profile = styled.div`
+export const SessionButton = styled.div`
   display: flex;
   margin-left: 20px;
   padding-left: 20px;
