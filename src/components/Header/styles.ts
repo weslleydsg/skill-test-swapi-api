@@ -2,8 +2,10 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   flex: 0 1 auto;
-  background: #ffe81f;
+
   padding: 0 30px;
+
+  background: ${(props) => props.theme.colors.header};
 `;
 
 export const Logo = styled.img`
@@ -13,10 +15,11 @@ export const Logo = styled.img`
 export const Content = styled.div`
   height: 64px;
   max-width: 900px;
-  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  margin: 0 auto;
 
   nav {
     display: flex;
@@ -25,12 +28,13 @@ export const Content = styled.div`
     img {
       margin-right: 20px;
       padding-right: 20px;
-      border-right: 1px solid #777;
+
+      border-right: 1px solid ${(props) => props.theme.colors.border};
     }
 
     a {
       font-weight: bold;
-      color: #000;
+      color: ${(props) => props.theme.colors.headerText};
     }
   }
 
@@ -42,11 +46,20 @@ export const Content = styled.div`
 
 export const SessionButton = styled.div`
   display: flex;
+  align-items: center;
+
   margin-left: 20px;
   padding-left: 20px;
-  border-left: 1px solid #777;
+
+  border-left: 1px solid ${(props) => props.theme.colors.border};
+
+  color: ${(props) => props.theme.colors.headerText};
 
   a {
-    color: #000;
+    color: ${(props) => props.theme.colors.headerText};
+  }
+
+  span {
+    margin-right: 10px;
   }
 `;

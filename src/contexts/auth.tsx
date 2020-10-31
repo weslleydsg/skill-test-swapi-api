@@ -1,6 +1,8 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext } from 'react';
 
 import * as auth from '../services/auth';
+
+import usePersistedState from '../utils/usePersistedState';
 
 import { JwtPayload } from '../interfaces/JwtPayload';
 
@@ -16,17 +18,16 @@ interface AuthContextData {
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider: React.FC = ({ children }) => {
-  const userLocalStorage = localStorage.getItem('@skill-test-swapi-api/user');
-
-  const [user, setUser] = useState<JwtPayload | null>(
-    userLocalStorage ? JSON.parse(userLocalStorage) : null
+  const [fakeUser, setFakeUser] = usePersistedState<JwtPayload | null>(
+    'user',
+    null
   );
 
   const signUp = async (name: string, username: string, password: string) => {
     const response = await auth.signUp(name, username, password);
 
     if (response) {
-      setUser(response);
+      setFakeUser(response);
 
       localStorage.setItem(
         '@skill-test-swapi-api/user',
@@ -43,7 +44,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     const response = await auth.signIn(username, password);
 
     if (response) {
-      setUser(response);
+      setFakeUser(response);
 
       localStorage.setItem(
         '@skill-test-swapi-api/user',
@@ -56,16 +57,13 @@ export const AuthProvider: React.FC = ({ children }) => {
     return false;
   };
 
-  const signOut = async () => {
-    setUser(null);
-    localStorage.removeItem('@skill-test-swapi-api/user');
-  };
+  const signOut = async () => setFakeUser(null);
 
   return (
     <AuthContext.Provider
       value={{
-        signed: Boolean(user),
-        user,
+        signed: Boolean(fakeUser),
+        user: fakeUser,
         signIn,
         signUp,
         signOut
