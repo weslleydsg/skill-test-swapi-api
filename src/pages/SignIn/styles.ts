@@ -10,7 +10,7 @@ export const Container = styled.div`
 
   > h1 {
     margin-bottom: 20px;
-    color: #ffe81f;
+    color: ${(props) => props.theme.colors.text};
   }
 
   > form {
