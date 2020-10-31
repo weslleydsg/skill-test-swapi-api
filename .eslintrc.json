@@ -27,6 +27,7 @@
     "space-before-function-paren": "off",
     "prettier/prettier": "error",
     "operator-linebreak": "off",
+    "indent": "off",
     "implicit-arrow-linebreak": "off",
     "comma-dangle": ["error", "never"],
     "no-unused-vars": "off",

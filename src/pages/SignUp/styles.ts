@@ -9,8 +9,9 @@ export const Container = styled.div`
   text-align: center;
 
   > h1 {
-    margin-bottom: 20px;
     color: ${(props) => props.theme.colors.text};
+
+    margin-bottom: 20px;
   }
 
   > form {
@@ -18,16 +19,49 @@ export const Container = styled.div`
     flex-direction: column;
 
     > span {
-      color: red;
       margin: 8px 0;
+
+      color: red;
     }
 
     input:not(:first-child) {
-      margin-top: 10px;
       width: 300px;
+
+      margin-top: 10px;
+    }
+
+    input {
+      width: 80vw;
+
+      color: ${(props) => props.theme.colors.highlight};
+      border-bottom: 2px solid ${(props) => props.theme.colors.border};
+
+      @media (min-width: 400px) {
+        max-width: 350px;
+      }
+    }
+
+    div {
+      > ::after {
+        border-bottom: 2px solid ${(props) => props.theme.colors.tertiary};
+      }
+    }
+
+    input::placeholder {
+      color: ${(props) => props.theme.colors.highlight};
+    }
+
+    input:focus {
+      color: ${(props) => props.theme.colors.tertiary};
     }
 
     button {
+      width: 120px;
+      align-self: flex-end;
+
+      color: white;
+      background: ${(props) => props.theme.colors.tertiary};
+
       margin-top: 20px;
     }
   }
