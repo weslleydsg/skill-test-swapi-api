@@ -15,7 +15,7 @@ export default {
     backgroundSecondary: '#fff',
     background: '#bebebe',
 
-    highlight: '#111',
-    border: '#444'
+    highlight: '#000',
+    border: '#333'
   }
 };

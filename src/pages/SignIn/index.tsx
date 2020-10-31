@@ -1,4 +1,7 @@
 import React, { ChangeEvent, useState } from 'react';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 
 import { useAuth } from '../../contexts/auth';
 
@@ -26,14 +29,14 @@ const SignIn: React.FC = () => {
     <Container>
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
-        <input
+        <TextField
           type="text"
           placeholder="Username"
           onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
             setUsername(target.value)
           }
         />
-        <input
+        <TextField
           type="password"
           placeholder="Password"
           onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
@@ -42,7 +45,13 @@ const SignIn: React.FC = () => {
         />
         {formHasError ? <span>Incorrect Credentials</span> : <div />}
 
-        <button type="submit">Sign In</button>
+        <Button
+          type="submit"
+          variant="contained"
+          startIcon={<AccountBoxIcon />}
+        >
+          Sign In
+        </Button>
       </form>
     </Container>
   );
