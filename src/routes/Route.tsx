@@ -34,12 +34,11 @@ const RouteWrapper: React.FC<RouteParam> = ({
 
   return (
     <Route
-      {...rest}
       render={() => (
         <Wrapper>
           <Header />
           <Layout>
-            <Component />
+            <Component {...rest} />
           </Layout>
         </Wrapper>
       )}

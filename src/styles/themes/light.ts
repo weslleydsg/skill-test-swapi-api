@@ -12,8 +12,9 @@ export default {
     text: '#222',
     textSecondary: '#ffffff',
 
-    backgroundSecondary: '#fff',
     background: '#bebebe',
+    backgroundSecondary: '#fff',
+    contentBackground: '#999',
 
     highlight: '#000',
     border: '#333'

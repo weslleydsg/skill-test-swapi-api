@@ -26,9 +26,7 @@ const SignUp: React.FC = () => {
 
     const created = await signUp(name, username, password);
 
-    if (!created) {
-      setFormHasError(true);
-    }
+    if (!created) setFormHasError(true);
   };
 
   return (

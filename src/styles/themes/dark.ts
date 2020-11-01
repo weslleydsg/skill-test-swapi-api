@@ -14,6 +14,7 @@ export default {
 
     background: '#111',
     backgroundSecondary: '#222',
+    contentBackground: '#444',
 
     highlight: '#fff',
     border: '#888'
