@@ -17,6 +17,7 @@ declare module 'styled-components' {
 
       background: string;
       backgroundSecondary: string;
+      contentBackground: string;
 
       highlight: string;
       border: string;
