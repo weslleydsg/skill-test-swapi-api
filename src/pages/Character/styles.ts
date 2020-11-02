@@ -18,10 +18,10 @@ export const CustomPaper = styled(Paper)`
   padding: 20px;
 
   background-color: ${(props) => {
-    if (props.theme.name === 'dark') {
-      return darken(0.1, props.theme.colors.contentBackground);
+    if (props.theme.name === 'light') {
+      return lighten(0.1, props.theme.colors.contentBackground);
     }
-    return lighten(0.1, props.theme.colors.contentBackground);
+    return darken(0.1, props.theme.colors.contentBackground);
   }} !important;
   color: ${(props) => props.theme.colors.text} !important;
 

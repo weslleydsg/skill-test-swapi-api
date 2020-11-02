@@ -21,10 +21,10 @@ export const Content = styled.div`
   padding: 25px;
 
   background: ${(props) => {
-    if (props.theme.name === 'dark') {
-      return darken(0.1, props.theme.colors.contentBackground);
+    if (props.theme.name === 'light') {
+      return lighten(0.2, props.theme.colors.contentBackground);
     }
-    return lighten(0.2, props.theme.colors.contentBackground);
+    return darken(0.1, props.theme.colors.contentBackground);
   }};
 
   border-radius: 5px;
