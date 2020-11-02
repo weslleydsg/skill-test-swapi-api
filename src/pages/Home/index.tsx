@@ -61,18 +61,23 @@ interface Starship {
   url: string;
 }
 
+type LoadState = 'idle' | 'loading' | 'loaded' | 'error';
+
 const Home: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const [charactersLoading, setCharactersLoading] = useState<boolean>(true);
-  const [starshipsLoading, setStarshipsLoading] = useState<boolean>(true);
-
   const [characters, setCharacters] = useState<Character[]>([]);
+  const [charactersLoadState, setCharactersLoadState] = useState<LoadState>(
+    'loading'
+  );
   const [charactersPage, setCharactersPage] = useState<number>(1);
-  const [openCharactersList, setOpenCharactersList] = React.useState(false);
+  const [openCharactersList, setOpenCharactersList] = React.useState(true);
 
   const [starships, setStarships] = useState<Starship[]>([]);
+  const [starshipsLoadState, setStarshipsLoadState] = useState<LoadState>(
+    'idle'
+  );
   const [starshipsPage, setStarshipsPage] = useState<number>(1);
   const [openStarshipsList, setOpenStarshipsList] = React.useState(false);
 
@@ -83,11 +88,25 @@ const Home: React.FC = () => {
     setOpenStarshipsList(!openStarshipsList);
 
   useEffect(() => {
-    if (!charactersLoading && !starshipsLoading) setLoading(false);
-  }, [charactersLoading, starshipsLoading]);
+    if (charactersLoadState === 'loading' || starshipsLoadState === 'loading') {
+      setLoading(true);
+    } else setLoading(false);
+  }, [charactersLoadState, starshipsLoadState]);
 
   useEffect(() => {
-    (async () => {
+    if (openCharactersList && charactersLoadState === 'idle') {
+      setCharactersLoadState('loading');
+    }
+  }, [openCharactersList]);
+
+  useEffect(() => {
+    if (openStarshipsList && starshipsLoadState === 'idle') {
+      setStarshipsLoadState('loading');
+    }
+  }, [openStarshipsList]);
+
+  useEffect(() => {
+    const loadData = async () => {
       try {
         const charactersResponse: ResponseList<Character> = await (
           await fetch(`http://swapi.dev/api/people/?page=${charactersPage}`)
@@ -96,16 +115,18 @@ const Home: React.FC = () => {
 
         if (charactersPage < Math.ceil(Number(charactersResponse.count) / 10)) {
           setCharactersPage(charactersPage + 1);
-        } else setCharactersLoading(false);
+        } else setCharactersLoadState('loaded');
       } catch (error) {
         setErrorMessage('Invalid API URL.');
-        setLoading(false);
+        setCharactersLoadState('error');
       }
-    })();
-  }, [charactersPage]);
+    };
+
+    if (charactersLoadState === 'loading') loadData();
+  }, [charactersLoadState, charactersPage]);
 
   useEffect(() => {
-    (async () => {
+    const loadData = async () => {
       try {
         const starshipsResponse: ResponseList<Starship> = await (
           await fetch(`http://swapi.dev/api/starships/?page=${starshipsPage}`)
@@ -114,13 +135,15 @@ const Home: React.FC = () => {
 
         if (starshipsPage < Math.ceil(Number(starshipsResponse.count) / 10)) {
           setStarshipsPage(starshipsPage + 1);
-        } else setStarshipsLoading(false);
+        } else setStarshipsLoadState('loaded');
       } catch (error) {
         setErrorMessage('Invalid API URL.');
-        setLoading(false);
+        setStarshipsLoadState('error');
       }
-    })();
-  }, [starshipsPage]);
+    };
+
+    if (starshipsLoadState === 'loading') loadData();
+  }, [starshipsLoadState, starshipsPage]);
 
   const HomeContent = () => {
     if (errorMessage) {
@@ -182,7 +205,12 @@ const Home: React.FC = () => {
     );
   };
 
-  return <Wrapper>{loading ? LoadingOverlay() : HomeContent()}</Wrapper>;
+  return (
+    <Wrapper>
+      {loading ? LoadingOverlay() : <div />}
+      {HomeContent()}
+    </Wrapper>
+  );
 };
 
 export default Home;
