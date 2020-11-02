@@ -5,6 +5,7 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import List from '@material-ui/core/List';
 import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
+import Typography from '@material-ui/core/Typography';
 
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -61,15 +62,18 @@ interface Starship {
 }
 
 const Home: React.FC = () => {
+  const [loading, setLoading] = useState<boolean>(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const [charactersLoading, setCharactersLoading] = useState<boolean>(true);
   const [starshipsLoading, setStarshipsLoading] = useState<boolean>(true);
 
-  const [charactersPage, setCharactersPage] = useState<number>(1);
   const [characters, setCharacters] = useState<Character[]>([]);
+  const [charactersPage, setCharactersPage] = useState<number>(1);
   const [openCharactersList, setOpenCharactersList] = React.useState(false);
 
-  const [starshipsPage, setStarshipsPage] = useState<number>(1);
   const [starships, setStarships] = useState<Starship[]>([]);
+  const [starshipsPage, setStarshipsPage] = useState<number>(1);
   const [openStarshipsList, setOpenStarshipsList] = React.useState(false);
 
   const handleCharactersListClick = () =>
@@ -79,96 +83,106 @@ const Home: React.FC = () => {
     setOpenStarshipsList(!openStarshipsList);
 
   useEffect(() => {
+    if (!charactersLoading && !starshipsLoading) setLoading(false);
+  }, [charactersLoading, starshipsLoading]);
+
+  useEffect(() => {
     (async () => {
-      const charactersResponse: ResponseList<Character> = await (
-        await fetch(`http://swapi.dev/api/people/?page=${charactersPage}`)
-      ).json();
-      setCharacters([...characters, ...charactersResponse.results]);
+      try {
+        const charactersResponse: ResponseList<Character> = await (
+          await fetch(`http://swapi.dev/api/people/?page=${charactersPage}`)
+        ).json();
+        setCharacters([...characters, ...charactersResponse.results]);
 
-      if (charactersPage < Math.ceil(Number(charactersResponse.count) / 10)) {
-        setCharactersPage(charactersPage + 1);
-        return;
+        if (charactersPage < Math.ceil(Number(charactersResponse.count) / 10)) {
+          setCharactersPage(charactersPage + 1);
+        } else setCharactersLoading(false);
+      } catch (error) {
+        setErrorMessage('Invalid API URL.');
+        setLoading(false);
       }
-
-      setCharactersLoading(false);
     })();
   }, [charactersPage]);
 
   useEffect(() => {
     (async () => {
-      const starshipsResponse: ResponseList<Starship> = await (
-        await fetch(`http://swapi.dev/api/starships/?page=${starshipsPage}`)
-      ).json();
-      setStarships([...starships, ...starshipsResponse.results]);
+      try {
+        const starshipsResponse: ResponseList<Starship> = await (
+          await fetch(`http://swapi.dev/api/starships/?page=${starshipsPage}`)
+        ).json();
+        setStarships([...starships, ...starshipsResponse.results]);
 
-      if (starshipsPage < Math.ceil(Number(starshipsResponse.count) / 10)) {
-        setStarshipsPage(starshipsPage + 1);
-        return;
+        if (starshipsPage < Math.ceil(Number(starshipsResponse.count) / 10)) {
+          setStarshipsPage(starshipsPage + 1);
+        } else setStarshipsLoading(false);
+      } catch (error) {
+        setErrorMessage('Invalid API URL.');
+        setLoading(false);
       }
-
-      setStarshipsLoading(false);
     })();
   }, [starshipsPage]);
 
-  const HomeContent = () => (
-    <Content>
-      <List
-        component="nav"
-        aria-labelledby="star-wars-list-api"
-        subheader={
-          <ListSubheader component="h1" id="star-wars-list-api">
-            Star Wars Api Lists
-          </ListSubheader>
-        }
-      >
-        <CustomListItem
-          id="Characters"
-          button
-          onClick={handleCharactersListClick}
-        >
-          <ListItemText primary="Characters" />
-          {openCharactersList ? <ExpandLess /> : <ExpandMore />}
-        </CustomListItem>
-        <Collapse in={openCharactersList} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            {characters.map((character) => (
-              <Link to={`/character/${character?.url.split('/')[5]}`}>
-                <CustomListItem id={character.name} button collapsed="true">
-                  <ListItemText primary={character.name} />
-                </CustomListItem>
-              </Link>
-            ))}
-          </List>
-        </Collapse>
+  const HomeContent = () => {
+    if (errorMessage) {
+      return <Typography variant="h4">{errorMessage}</Typography>;
+    }
 
-        <CustomListItem
-          id="Starships"
-          button
-          onClick={handleStarshipsListClick}
+    return (
+      <Content>
+        <List
+          component="nav"
+          aria-labelledby="star-wars-list-api"
+          subheader={
+            <ListSubheader component="h1" id="star-wars-list-api">
+              Star Wars Api Lists
+            </ListSubheader>
+          }
         >
-          <ListItemText primary="Starships" />
-          {openStarshipsList ? <ExpandLess /> : <ExpandMore />}
-        </CustomListItem>
-        <Collapse in={openStarshipsList} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            {starships.map((starship) => (
-              <Link to={`/starship/${starship?.url.split('/')[5]}`}>
-                <CustomListItem id={starship.name} button collapsed="true">
-                  <ListItemText primary={starship.name} />
-                </CustomListItem>
-              </Link>
-            ))}
-          </List>
-        </Collapse>
-      </List>
-    </Content>
-  );
+          <CustomListItem
+            id="Characters"
+            button
+            onClick={handleCharactersListClick}
+          >
+            <ListItemText primary="Characters" />
+            {openCharactersList ? <ExpandLess /> : <ExpandMore />}
+          </CustomListItem>
+          <Collapse in={openCharactersList} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              {characters.map((character) => (
+                <Link to={`/character/${character?.url.split('/')[5]}`}>
+                  <CustomListItem id={character.name} button collapsed="true">
+                    <ListItemText primary={character.name} />
+                  </CustomListItem>
+                </Link>
+              ))}
+            </List>
+          </Collapse>
 
-  return (
-    <Wrapper>
-      {charactersLoading || starshipsLoading ? LoadingOverlay() : HomeContent()}
-    </Wrapper>
-  );
+          <CustomListItem
+            id="Starships"
+            button
+            onClick={handleStarshipsListClick}
+          >
+            <ListItemText primary="Starships" />
+            {openStarshipsList ? <ExpandLess /> : <ExpandMore />}
+          </CustomListItem>
+          <Collapse in={openStarshipsList} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              {starships.map((starship) => (
+                <Link to={`/starship/${starship?.url.split('/')[5]}`}>
+                  <CustomListItem id={starship.name} button collapsed="true">
+                    <ListItemText primary={starship.name} />
+                  </CustomListItem>
+                </Link>
+              ))}
+            </List>
+          </Collapse>
+        </List>
+      </Content>
+    );
+  };
+
+  return <Wrapper>{loading ? LoadingOverlay() : HomeContent()}</Wrapper>;
 };
 
 export default Home;
