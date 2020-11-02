@@ -104,7 +104,7 @@ const Header: React.FC = () => {
         <span>Dark Mode</span>
         <Switch
           onChange={toggleTheme}
-          checked={themeName === 'dark'}
+          checked={themeName !== 'light'}
           checkedIcon={false}
           uncheckedIcon={false}
           handleDiameter={24}
