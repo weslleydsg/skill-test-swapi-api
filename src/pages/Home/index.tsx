@@ -109,7 +109,9 @@ const Home: React.FC = () => {
     const loadData = async () => {
       try {
         const charactersResponse: ResponseList<Character> = await (
-          await fetch(`http://swapi.dev/api/people/?page=${charactersPage}`)
+          await fetch(
+            `${process.env.REACT_APP_API_URL}people/?page=${charactersPage}`
+          )
         ).json();
         setCharacters([...characters, ...charactersResponse.results]);
 
@@ -129,7 +131,9 @@ const Home: React.FC = () => {
     const loadData = async () => {
       try {
         const starshipsResponse: ResponseList<Starship> = await (
-          await fetch(`http://swapi.dev/api/starships/?page=${starshipsPage}`)
+          await fetch(
+            `${process.env.REACT_APP_API_URL}starships/?page=${starshipsPage}`
+          )
         ).json();
         setStarships([...starships, ...starshipsResponse.results]);
 

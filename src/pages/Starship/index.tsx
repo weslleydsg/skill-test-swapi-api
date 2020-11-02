@@ -36,7 +36,7 @@ const Starship: React.FC = ({ computedMatch }: any) => {
     (async () => {
       try {
         const starshipResponse: StarshipData = await (
-          await fetch(`http://swapi.dev/api/starships/${id}/`)
+          await fetch(`${process.env.REACT_APP_API_URL}starships/${id}/`)
         ).json();
 
         if (starshipResponse.detail) setErrorMessage('Starship not found.');
