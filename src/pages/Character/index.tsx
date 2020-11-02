@@ -31,7 +31,7 @@ const Character: React.FC = ({ computedMatch }: any) => {
     (async () => {
       try {
         const characterResponse: CharacterData = await (
-          await fetch(`http://swapi.dev/api/people/${id}/`)
+          await fetch(`${process.env.REACT_APP_API_URL}people/${id}/`)
         ).json();
 
         if (characterResponse.detail) setErrorMessage('Character not found.');
