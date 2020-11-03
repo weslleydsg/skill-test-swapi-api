@@ -44,6 +44,7 @@ const SignUp: React.FC = () => {
         <TextField
           type="text"
           placeholder="Username"
+          autoComplete="username"
           onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
             setUsername(target.value)
           }
@@ -51,6 +52,7 @@ const SignUp: React.FC = () => {
         <TextField
           type="password"
           placeholder="Password"
+          autoComplete="current-password"
           onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
             setPassword(target.value)
           }
