@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -19,8 +20,12 @@ interface CharacterData {
   detail?: string;
 }
 
-const Character: React.FC = ({ computedMatch }: any) => {
-  const { id } = computedMatch.params;
+interface Params {
+  id: string;
+}
+
+const Character: React.FC = () => {
+  const { id } = useParams<Params>();
 
   const [character, setCharacter] = useState<CharacterData | null>(null);
 
