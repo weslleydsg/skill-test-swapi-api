@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -24,8 +25,12 @@ interface StarshipData {
   detail?: string;
 }
 
-const Starship: React.FC = ({ computedMatch }: any) => {
-  const { id } = computedMatch.params;
+interface Params {
+  id: string;
+}
+
+const Starship: React.FC = () => {
+  const { id } = useParams<Params>();
 
   const [starship, setStarship] = useState<StarshipData | null>(null);
 

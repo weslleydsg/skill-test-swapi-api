@@ -13,24 +13,14 @@ import Starship from '../pages/Starship';
 
 const Routes: React.FC = () => (
   <Switch>
+    <Route exact path="/" component={Home} />
+
     <Route path="/SignUp" component={SignUp} accessType="strictPublic" />
     <Route path="/SignIn" component={SignIn} accessType="strictPublic" />
 
-    <Route path="/" exact component={Home} />
+    <Route path="/character/:id" component={Character} accessType="private" />
 
-    <Route
-      path="/character/:id"
-      exact
-      component={Character}
-      accessType="private"
-    />
-
-    <Route
-      path="/starship/:id"
-      exact
-      component={Starship}
-      accessType="private"
-    />
+    <Route path="/starship/:id" component={Starship} accessType="private" />
   </Switch>
 );
 
