@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
-import LoadingOverlay from '../../components/LoadingOverlay';
+import { useLoadOverlay } from '../../contexts/loadOverlay';
 
 import { Content, CustomPaper } from './styles';
 
@@ -29,11 +29,13 @@ const Character: React.FC = () => {
 
   const [character, setCharacter] = useState<CharacterData | null>(null);
 
-  const [loading, setLoading] = useState<boolean>(true);
+  const { loading, setLoadingOverlay } = useLoadOverlay();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
+      setLoadingOverlay(true);
+
       try {
         const characterResponse: CharacterData = await (
           await fetch(`${process.env.REACT_APP_API_URL}people/${id}/`)
@@ -42,10 +44,10 @@ const Character: React.FC = () => {
         if (characterResponse.detail) setErrorMessage('Character not found.');
         else setCharacter(characterResponse);
 
-        setLoading(false);
+        setLoadingOverlay(false);
       } catch (error) {
         setErrorMessage('Invalid API URL.');
-        setLoading(false);
+        setLoadingOverlay(false);
       }
     })();
   }, []);
@@ -82,7 +84,7 @@ const Character: React.FC = () => {
     );
   };
 
-  return <Content>{loading ? LoadingOverlay() : DetailContent()}</Content>;
+  return <Content>{loading ? () => {} : DetailContent()}</Content>;
 };
 
 export default Character;

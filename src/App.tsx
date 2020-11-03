@@ -1,12 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
+
 import { ThemeProvider } from 'styled-components';
 
 import { AuthProvider } from './contexts/auth';
+import { LoadOverlayProvider } from './contexts/loadOverlay';
 
 import Routes from './routes';
 
-import { Wrapper } from './routes/styles'; // TODO
+import { Wrapper } from './routes/styles';
 import GlobalStyle from './styles/global';
 
 import { useTheme } from './contexts/theme';
@@ -21,14 +23,16 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <AuthProvider>
-        <ThemeProvider theme={themeName === 'light' ? light : dark}>
-          <Wrapper>
-            <Header />
-            <Routes />
-          </Wrapper>
-        </ThemeProvider>
-      </AuthProvider>
+      <Wrapper>
+        <AuthProvider>
+          <ThemeProvider theme={themeName === 'light' ? light : dark}>
+            <LoadOverlayProvider>
+              <Header />
+              <Routes />
+            </LoadOverlayProvider>
+          </ThemeProvider>
+        </AuthProvider>
+      </Wrapper>
       <GlobalStyle />
     </Router>
   );

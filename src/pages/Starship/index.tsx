@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
-import LoadingOverlay from '../../components/LoadingOverlay';
+import { useLoadOverlay } from '../../contexts/loadOverlay';
 
 import { Content, CustomPaper } from './styles';
 
@@ -34,11 +34,13 @@ const Starship: React.FC = () => {
 
   const [starship, setStarship] = useState<StarshipData | null>(null);
 
-  const [loading, setLoading] = useState<boolean>(true);
+  const { loading, setLoadingOverlay } = useLoadOverlay();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
+      setLoadingOverlay(true);
+
       try {
         const starshipResponse: StarshipData = await (
           await fetch(`${process.env.REACT_APP_API_URL}starships/${id}/`)
@@ -47,10 +49,10 @@ const Starship: React.FC = () => {
         if (starshipResponse.detail) setErrorMessage('Starship not found.');
         else setStarship(starshipResponse);
 
-        setLoading(false);
+        setLoadingOverlay(false);
       } catch (error) {
         setErrorMessage('Invalid API URL.');
-        setLoading(false);
+        setLoadingOverlay(false);
       }
     })();
   }, []);
@@ -105,7 +107,7 @@ const Starship: React.FC = () => {
     );
   };
 
-  return <Content>{loading ? LoadingOverlay() : DetailContent()}</Content>;
+  return <Content>{loading ? () => {} : DetailContent()}</Content>;
 };
 
 export default Starship;

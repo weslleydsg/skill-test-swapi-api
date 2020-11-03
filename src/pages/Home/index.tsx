@@ -10,9 +10,8 @@ import Typography from '@material-ui/core/Typography';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 
-import LoadingOverlay from '../../components/LoadingOverlay';
-
 import { Wrapper, Content, CustomListItem } from './styles';
+import { useLoadOverlay } from '../../contexts/loadOverlay';
 
 interface ResponseList<T> {
   count: string;
@@ -64,7 +63,7 @@ interface Starship {
 type LoadState = 'idle' | 'loading' | 'loaded' | 'error';
 
 const Home: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const { setLoadingOverlay } = useLoadOverlay();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const [characters, setCharacters] = useState<Character[]>([]);
@@ -89,8 +88,8 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (charactersLoadState === 'loading' || starshipsLoadState === 'loading') {
-      setLoading(true);
-    } else setLoading(false);
+      setLoadingOverlay(true);
+    } else setLoadingOverlay(false);
   }, [charactersLoadState, starshipsLoadState]);
 
   useEffect(() => {
@@ -209,12 +208,7 @@ const Home: React.FC = () => {
     );
   };
 
-  return (
-    <Wrapper>
-      {loading ? LoadingOverlay() : <div />}
-      {HomeContent()}
-    </Wrapper>
-  );
+  return <Wrapper>{HomeContent()}</Wrapper>;
 };
 
 export default Home;
