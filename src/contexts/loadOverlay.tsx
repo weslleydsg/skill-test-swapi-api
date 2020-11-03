@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 import LinearProgress from '@material-ui/core/LinearProgress';
+import { useHistory } from 'react-router-dom';
 
 interface LoadOverlayContextData {
   loading: boolean;
@@ -13,6 +14,9 @@ const LoadOverlayContext = createContext<LoadOverlayContextData>(
 
 export const LoadOverlayProvider: React.FC = ({ children }) => {
   const [loading, setLoadingOverlay] = useState<boolean>(false);
+
+  const history = useHistory();
+  useEffect(() => history.listen(() => setLoadingOverlay(false)), []);
 
   return (
     <LoadOverlayContext.Provider value={{ loading, setLoadingOverlay }}>

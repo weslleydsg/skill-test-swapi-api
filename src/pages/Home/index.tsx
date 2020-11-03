@@ -105,6 +105,8 @@ const Home: React.FC = () => {
   }, [openStarshipsList]);
 
   useEffect(() => {
+    let unmounted = false;
+
     const loadData = async () => {
       try {
         const charactersResponse: ResponseList<Character> = await (
@@ -112,21 +114,32 @@ const Home: React.FC = () => {
             `${process.env.REACT_APP_API_URL}people/?page=${charactersPage}`
           )
         ).json();
+
+        if (unmounted) return;
+
         setCharacters([...characters, ...charactersResponse.results]);
 
         if (charactersPage < Math.ceil(Number(charactersResponse.count) / 10)) {
           setCharactersPage(charactersPage + 1);
         } else setCharactersLoadState('loaded');
       } catch (error) {
+        if (unmounted) return;
+
         setErrorMessage('Invalid API URL.');
         setCharactersLoadState('error');
       }
     };
 
     if (charactersLoadState === 'loading') loadData();
+
+    return () => {
+      unmounted = true;
+    };
   }, [charactersLoadState, charactersPage]);
 
   useEffect(() => {
+    let unmounted = false;
+
     const loadData = async () => {
       try {
         const starshipsResponse: ResponseList<Starship> = await (
@@ -134,18 +147,27 @@ const Home: React.FC = () => {
             `${process.env.REACT_APP_API_URL}starships/?page=${starshipsPage}`
           )
         ).json();
+
+        if (unmounted) return;
+
         setStarships([...starships, ...starshipsResponse.results]);
 
         if (starshipsPage < Math.ceil(Number(starshipsResponse.count) / 10)) {
           setStarshipsPage(starshipsPage + 1);
         } else setStarshipsLoadState('loaded');
       } catch (error) {
+        if (unmounted) return;
+
         setErrorMessage('Invalid API URL.');
         setStarshipsLoadState('error');
       }
     };
 
     if (starshipsLoadState === 'loading') loadData();
+
+    return () => {
+      unmounted = true;
+    };
   }, [starshipsLoadState, starshipsPage]);
 
   const HomeContent = () => {

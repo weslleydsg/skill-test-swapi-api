@@ -84,7 +84,7 @@ const Character: React.FC = () => {
     );
   };
 
-  return <Content>{loading ? () => {} : DetailContent()}</Content>;
+  return <Content>{loading ? '' : DetailContent()}</Content>;
 };
 
 export default Character;
