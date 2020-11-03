@@ -1,46 +1,41 @@
-# Getting Started with Create React App
+<div id="skill-test-swapi-api-logo" align="center">
+  <br />
+  <img src="./src/assets/logo.png" alt="logo" width="300"/>
+  <h1>Skill Test Swapi API</h1>
+</div>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+#### This is a Web application built with [ReactJS](https://reactjs.org/) and a free API of Star Wars called [Swapi](https://swapi.dev/).
 
-## Available Scripts
+## **Check out the production site in [leatus.live](https://leatus.live/).**
 
-In the project directory, you can run:
+## Shortcuts
 
-### `yarn start`
+- [Download](#download)
+- [Try it yourself](#try-it-yourself)
+- [License](#license)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## <a id="download"></a>Download
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+[Here you can check out the latest release](https://github.com/weslleydsg/skill-test-swapi-api/releases)
 
-### `yarn test`
+## <a id="try-it-yourself"></a>Try it yourself
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+You can simply test it out in development mode by running the following commands:
 
-### `yarn build`
+```bash
+yarn && yarn start
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+If you don't have yarn installed you can download it [here](https://classic.yarnpkg.com/en/docs/install). (Recommend)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+You can also use npm:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm install && npm run start
+```
 
-### `yarn eject`
+Go to [http://localhost:3000](http://localhost:3000) in your browser and you ready to go.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## <a id="license"></a>License
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+MIT
