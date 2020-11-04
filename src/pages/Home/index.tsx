@@ -186,19 +186,18 @@ const Home: React.FC = () => {
             </ListSubheader>
           }
         >
-          <CustomListItem
-            id="Characters"
-            button
-            onClick={handleCharactersListClick}
-          >
+          <CustomListItem button onClick={handleCharactersListClick}>
             <ListItemText primary="Characters" />
             {openCharactersList ? <ExpandLess /> : <ExpandMore />}
           </CustomListItem>
           <Collapse in={openCharactersList} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               {characters.map((character) => (
-                <Link to={`/character/${character?.url.split('/')[5]}`}>
-                  <CustomListItem id={character.name} button collapsed="true">
+                <Link
+                  key={`characters-${character?.url.split('/')[5]}`}
+                  to={`/character/${character?.url.split('/')[5]}`}
+                >
+                  <CustomListItem button collapsed="true">
                     <ListItemText primary={character.name} />
                   </CustomListItem>
                 </Link>
@@ -206,19 +205,18 @@ const Home: React.FC = () => {
             </List>
           </Collapse>
 
-          <CustomListItem
-            id="Starships"
-            button
-            onClick={handleStarshipsListClick}
-          >
+          <CustomListItem button onClick={handleStarshipsListClick}>
             <ListItemText primary="Starships" />
             {openStarshipsList ? <ExpandLess /> : <ExpandMore />}
           </CustomListItem>
           <Collapse in={openStarshipsList} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               {starships.map((starship) => (
-                <Link to={`/starship/${starship?.url.split('/')[5]}`}>
-                  <CustomListItem id={starship.name} button collapsed="true">
+                <Link
+                  key={`starships-${starship?.url.split('/')[5]}`}
+                  to={`/starship/${starship?.url.split('/')[5]}`}
+                >
+                  <CustomListItem button collapsed="true">
                     <ListItemText primary={starship.name} />
                   </CustomListItem>
                 </Link>
