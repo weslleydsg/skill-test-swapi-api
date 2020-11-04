@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
-import LoadingOverlay from '../../components/LoadingOverlay';
+import { useLoadOverlay } from '../../contexts/loadOverlay';
 
 import { Content, CustomPaper } from './styles';
 
@@ -19,16 +20,22 @@ interface CharacterData {
   detail?: string;
 }
 
-const Character: React.FC = ({ computedMatch }: any) => {
-  const { id } = computedMatch.params;
+interface Params {
+  id: string;
+}
+
+const Character: React.FC = () => {
+  const { id } = useParams<Params>();
 
   const [character, setCharacter] = useState<CharacterData | null>(null);
 
-  const [loading, setLoading] = useState<boolean>(true);
+  const { loading, setLoadingOverlay } = useLoadOverlay();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
+      setLoadingOverlay(true);
+
       try {
         const characterResponse: CharacterData = await (
           await fetch(`${process.env.REACT_APP_API_URL}people/${id}/`)
@@ -37,10 +44,10 @@ const Character: React.FC = ({ computedMatch }: any) => {
         if (characterResponse.detail) setErrorMessage('Character not found.');
         else setCharacter(characterResponse);
 
-        setLoading(false);
+        setLoadingOverlay(false);
       } catch (error) {
         setErrorMessage('Invalid API URL.');
-        setLoading(false);
+        setLoadingOverlay(false);
       }
     })();
   }, []);
@@ -77,7 +84,7 @@ const Character: React.FC = ({ computedMatch }: any) => {
     );
   };
 
-  return <Content>{loading ? LoadingOverlay() : DetailContent()}</Content>;
+  return <Content>{loading ? '' : DetailContent()}</Content>;
 };
 
 export default Character;

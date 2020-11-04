@@ -10,9 +10,8 @@ import Typography from '@material-ui/core/Typography';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 
-import LoadingOverlay from '../../components/LoadingOverlay';
-
 import { Wrapper, Content, CustomListItem } from './styles';
+import { useLoadOverlay } from '../../contexts/loadOverlay';
 
 interface ResponseList<T> {
   count: string;
@@ -64,7 +63,7 @@ interface Starship {
 type LoadState = 'idle' | 'loading' | 'loaded' | 'error';
 
 const Home: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const { setLoadingOverlay } = useLoadOverlay();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const [characters, setCharacters] = useState<Character[]>([]);
@@ -89,8 +88,8 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (charactersLoadState === 'loading' || starshipsLoadState === 'loading') {
-      setLoading(true);
-    } else setLoading(false);
+      setLoadingOverlay(true);
+    } else setLoadingOverlay(false);
   }, [charactersLoadState, starshipsLoadState]);
 
   useEffect(() => {
@@ -106,6 +105,8 @@ const Home: React.FC = () => {
   }, [openStarshipsList]);
 
   useEffect(() => {
+    let unmounted = false;
+
     const loadData = async () => {
       try {
         const charactersResponse: ResponseList<Character> = await (
@@ -113,21 +114,32 @@ const Home: React.FC = () => {
             `${process.env.REACT_APP_API_URL}people/?page=${charactersPage}`
           )
         ).json();
+
+        if (unmounted) return;
+
         setCharacters([...characters, ...charactersResponse.results]);
 
         if (charactersPage < Math.ceil(Number(charactersResponse.count) / 10)) {
           setCharactersPage(charactersPage + 1);
         } else setCharactersLoadState('loaded');
       } catch (error) {
+        if (unmounted) return;
+
         setErrorMessage('Invalid API URL.');
         setCharactersLoadState('error');
       }
     };
 
     if (charactersLoadState === 'loading') loadData();
+
+    return () => {
+      unmounted = true;
+    };
   }, [charactersLoadState, charactersPage]);
 
   useEffect(() => {
+    let unmounted = false;
+
     const loadData = async () => {
       try {
         const starshipsResponse: ResponseList<Starship> = await (
@@ -135,18 +147,27 @@ const Home: React.FC = () => {
             `${process.env.REACT_APP_API_URL}starships/?page=${starshipsPage}`
           )
         ).json();
+
+        if (unmounted) return;
+
         setStarships([...starships, ...starshipsResponse.results]);
 
         if (starshipsPage < Math.ceil(Number(starshipsResponse.count) / 10)) {
           setStarshipsPage(starshipsPage + 1);
         } else setStarshipsLoadState('loaded');
       } catch (error) {
+        if (unmounted) return;
+
         setErrorMessage('Invalid API URL.');
         setStarshipsLoadState('error');
       }
     };
 
     if (starshipsLoadState === 'loading') loadData();
+
+    return () => {
+      unmounted = true;
+    };
   }, [starshipsLoadState, starshipsPage]);
 
   const HomeContent = () => {
@@ -165,19 +186,18 @@ const Home: React.FC = () => {
             </ListSubheader>
           }
         >
-          <CustomListItem
-            id="Characters"
-            button
-            onClick={handleCharactersListClick}
-          >
+          <CustomListItem button onClick={handleCharactersListClick}>
             <ListItemText primary="Characters" />
             {openCharactersList ? <ExpandLess /> : <ExpandMore />}
           </CustomListItem>
           <Collapse in={openCharactersList} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               {characters.map((character) => (
-                <Link to={`/character/${character?.url.split('/')[5]}`}>
-                  <CustomListItem id={character.name} button collapsed="true">
+                <Link
+                  key={`characters-${character?.url.split('/')[5]}`}
+                  to={`/character/${character?.url.split('/')[5]}`}
+                >
+                  <CustomListItem button collapsed="true">
                     <ListItemText primary={character.name} />
                   </CustomListItem>
                 </Link>
@@ -185,19 +205,18 @@ const Home: React.FC = () => {
             </List>
           </Collapse>
 
-          <CustomListItem
-            id="Starships"
-            button
-            onClick={handleStarshipsListClick}
-          >
+          <CustomListItem button onClick={handleStarshipsListClick}>
             <ListItemText primary="Starships" />
             {openStarshipsList ? <ExpandLess /> : <ExpandMore />}
           </CustomListItem>
           <Collapse in={openStarshipsList} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               {starships.map((starship) => (
-                <Link to={`/starship/${starship?.url.split('/')[5]}`}>
-                  <CustomListItem id={starship.name} button collapsed="true">
+                <Link
+                  key={`starships-${starship?.url.split('/')[5]}`}
+                  to={`/starship/${starship?.url.split('/')[5]}`}
+                >
+                  <CustomListItem button collapsed="true">
                     <ListItemText primary={starship.name} />
                   </CustomListItem>
                 </Link>
@@ -209,12 +228,7 @@ const Home: React.FC = () => {
     );
   };
 
-  return (
-    <Wrapper>
-      {loading ? LoadingOverlay() : <div />}
-      {HomeContent()}
-    </Wrapper>
-  );
+  return <Wrapper>{HomeContent()}</Wrapper>;
 };
 
 export default Home;

@@ -1,12 +1,14 @@
 import React from 'react';
-import { Router } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
+
 import { ThemeProvider } from 'styled-components';
 
 import { AuthProvider } from './contexts/auth';
+import { LoadOverlayProvider } from './contexts/loadOverlay';
 
 import Routes from './routes';
-import history from './services/history';
 
+import { Wrapper } from './routes/styles';
 import GlobalStyle from './styles/global';
 
 import { useTheme } from './contexts/theme';
@@ -14,16 +16,23 @@ import { useTheme } from './contexts/theme';
 import light from './styles/themes/light';
 import dark from './styles/themes/dark';
 
+import Header from './components/Header';
+
 const App: React.FC = () => {
   const { themeName } = useTheme();
 
   return (
-    <Router history={history}>
-      <ThemeProvider theme={themeName === 'light' ? light : dark}>
+    <Router>
+      <Wrapper>
         <AuthProvider>
-          <Routes />
+          <ThemeProvider theme={themeName === 'light' ? light : dark}>
+            <LoadOverlayProvider>
+              <Header />
+              <Routes />
+            </LoadOverlayProvider>
+          </ThemeProvider>
         </AuthProvider>
-      </ThemeProvider>
+      </Wrapper>
       <GlobalStyle />
     </Router>
   );
